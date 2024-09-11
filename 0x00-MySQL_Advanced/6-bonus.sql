@@ -1,4 +1,5 @@
 -- procedure AddBonus
+DELIMITER //
 CREATE PROCEDURE AddBonus (user_id INT, project_name VARCHAR(255), score INT)
 BEGIN
     DECLARE project_id INT;
@@ -12,4 +13,5 @@ BEGIN
     SELECT id INTO project_id FROM projects WHERE name = project_name;
 
     INSERT INTO corrections (user_id, project_id, score) VALUES (user_id, project_id, score);
-END;
+END; //
+DELIMITER ;
