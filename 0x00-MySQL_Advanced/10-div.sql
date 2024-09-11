@@ -1,4 +1,5 @@
 -- function: SafeDiv
+DELIMITER //
 CREATE FUNCTION SafeDiv(a INT, b INT)
 BEGIN
     if n = 0 THEN
@@ -6,4 +7,5 @@ BEGIN
     ELSE
         RETURN a / b;
     END IF;
-END;
+END; //
+DELIMITER;
