@@ -2,10 +2,10 @@
 DELIMITER //
 CREATE FUNCTION SafeDiv(a INT, b INT)
 BEGIN
-    if b = 0 THEN
-        RETURN 0;
-    ELSE
-        RETURN a / b;
+    DECLARE res float DEFAULT 0;
+    if b != 0 THEN
+        res = a / b;
     END IF;
+    RETURN res;
 END; //
 DELIMITER;
