@@ -2,18 +2,15 @@
 DELIMITER $$
 CREATE PROCEDURE ComputeAverageWeightedScoreForUsers()
 BEGIN
-    DECLARE user_id INT;
-    DECLARE done INT DEFAULT FALSE;
-    DECLARE cur CURSOR FOR SELECT id FROM users;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    DECLARE user_cursor CURSOR FOR
+    SELECT id FROM user;
 
-    OPEN cur;
+    OPEN user_cursor;
 
-    read_loop: LOOP
-        FETCH cur INTO user_id;
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
+    FETCH NEXT FROM user_cursor INTO @user_id;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
 
         DECLARE total_score INT;
         DECLARE total_count INT;
@@ -35,7 +32,8 @@ BEGIN
         UPDATE users SET users.average_score = total_score / total_count
         WHERE users.id = user_id;
 
-    END LOOP;
-    CLOSE cur;
+        FETCH NEXT FROM user_cursor INTO @user_id;
+    END;
+
 END; $$
 DELIMITER ;
