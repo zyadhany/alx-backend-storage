@@ -1,6 +1,6 @@
 -- procedure AddBonus
 DELIMITER //
-CREATE PROCEDURE AddBonus (user_id INT, project_name VARCHAR(255), score INT)
+CREATE PROCEDURE ComputeAverageWeightedScoreForUser (user_id INT)
 BEGIN
     DECLARE total_score INT;
     DECLARE total_count INT;
