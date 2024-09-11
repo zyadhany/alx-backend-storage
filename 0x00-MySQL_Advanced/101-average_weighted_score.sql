@@ -1,19 +1,25 @@
 -- Procedure: ComputeAverageWeightedScoreForUsers
 DELIMITER $$
+
 CREATE PROCEDURE ComputeAverageWeightedScoreForUsers()
 BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE user_id INT;
+    DECLARE total_score INT;
+    DECLARE total_count INT;
+
     DECLARE user_cursor CURSOR FOR
     SELECT id FROM user;
 
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
     OPEN user_cursor;
 
-    FETCH NEXT FROM user_cursor INTO @user_id;
-
-    WHILE @@FETCH_STATUS = 0
-    BEGIN
-
-        DECLARE total_score INT;
-        DECLARE total_count INT;
+    read_loop: LOOP
+        FETCH user_cursor INTO user_id;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
 
         SELECT SUM(corrections.score * projects.weight)
             INTO total_score
@@ -29,11 +35,14 @@ BEGIN
                     ON corrections.project_id = projects.id
             WHERE corrections.user_id = user_id;
 
-        UPDATE users SET users.average_score = total_score / total_count
-        WHERE users.id = user_id;
+        IF total_count IS NOT NULL AND total_count != 0 THEN
+            UPDATE user SET user.average_score = total_score / total_count
+            WHERE user.id = user_id;
+        END IF;
+    END LOOP;
 
-        FETCH NEXT FROM user_cursor INTO @user_id;
-    END;
+    CLOSE user_cursor;
+    DEALLOCATE PREPARE user_cursor;
+END $$
 
-END; $$
 DELIMITER ;
