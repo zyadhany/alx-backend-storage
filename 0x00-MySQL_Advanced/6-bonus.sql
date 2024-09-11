@@ -2,16 +2,16 @@
 DELIMITER //
 CREATE PROCEDURE AddBonus (user_id INT, project_name VARCHAR(255), score INT)
 BEGIN
-    DECLARE project_id INT;
-    DECLARE project_cound INT;
+    DECLARE total_score INT;
+    DECLARE total_count INT;
 
-    SELECT COUNT(*) INTO project_cound FROM projects WHERE name = project_name;
+    SELECT SUM(corrections.score * projects.weight) INTO total_score,
+            SUM(projects.weight) INTO total_count
+    FROM corrections
+    JOIN projects ON corrections.project_id = projects.id
+    WHERE corrections.user_id = user_id AND projects.name = project_name;
 
-    if project_cound = 0 THEN
-        INSERT INTO projects (name) VALUES (project_name);
-    END IF;
-    SELECT id INTO project_id FROM projects WHERE name = project_name;
-
-    INSERT INTO corrections (user_id, project_id, score) VALUES (user_id, project_id, score);
+    UPDATE users SET users.average_score = total_score / total_count
+    WHERE users.id = user_id;
 END; //
 DELIMITER ;
