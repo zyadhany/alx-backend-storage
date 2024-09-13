@@ -5,10 +5,12 @@ web file
 
 import requests
 import redis
+from functools import wraps
 
 
 def cache(method):
     """ Cache decorator """
+    @wraps(method)
     def invoker(url):
         """ invoker function """
         re = redis.Redis()
