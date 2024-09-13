@@ -6,10 +6,10 @@ exercise file
 import redis
 from functools import wraps
 import uuid
-from typing import Union
+from typing import Union, Callable
 
 
-def count_calls(method: callable) -> callable:
+def count_calls(method: Callable) -> Callable:
     """ Count calls decorator """
     @wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -35,7 +35,7 @@ class Cache:
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: callable = None) \
+    def get(self, key: str, fn: Callable = None) \
             -> Union[str, bytes, int, float]:
         """ Get data from redis """
         data = self._redis.get(key)
