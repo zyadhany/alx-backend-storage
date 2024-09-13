@@ -10,7 +10,7 @@ from functools import wraps
 
 def cache(method):
     """ Cache decorator """
-    @wraps(fn)
+    @wraps(method)
     def wrapper(url: str) -> str:
         """ Wrapper that:
             - check whether a url's data is cached
