@@ -1,2 +1,2 @@
 // mongodb list data bases
-db.school.drop({name:"Holberton school"})
+db.school.deleteMany({name:"Holberton school"})
