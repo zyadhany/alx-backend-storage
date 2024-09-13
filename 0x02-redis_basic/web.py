@@ -21,7 +21,7 @@ def cache(method):
         cached_page = client.get(f'{url}')
         if cached_page:
             return cached_page.decode('utf-8')
-        response = fn(url)
+        response = method(url)
         client.set(f'{url}', response, 10)
         return response
     return wrapper
