@@ -16,8 +16,8 @@ redis_store = redis.Redis()
 def casher(method: Callable) -> Callable:
     """ Casher decorator """
     @wraps(method)
-    def wrapper(url) -> str:
-        """ Wrapper function """
+    def invoker(url) -> str:
+        """ invoker function """
         redis_store.incr(f"count:{url}")
         res = redis_store.get(f"result:{url}")
         if res:
@@ -26,7 +26,7 @@ def casher(method: Callable) -> Callable:
         redis_store.setex(f"result:{url}", 10, res)
         redis_store.set(f"count:{url}", 0)
         return res
-    return wrapper
+    return invoker
 
 
 @casher
