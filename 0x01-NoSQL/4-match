@@ -1,0 +1,2 @@
+// mongodb list data bases
+db.school.find({name:"Holberton school"})
