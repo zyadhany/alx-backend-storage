@@ -8,13 +8,13 @@ import redis
 from functools import wraps
 
 
-
 def get_page(url: str) -> str:
     """ Get page function """
     re = redis.Redis()
     re.incr(f"count:{url}")
-    return requests.get(url).text
-
-
-if __name__ == "__main__":
-    print(get_page("http://slowwly.robertomurray.co.uk"))
+    res = re.get(url)
+    if res:
+        return res.decode('utf-8')
+    res = requests.get(url).text
+    re.setex(url, 10, res)
+    return res
