@@ -1,2 +1,2 @@
 // mongodb list data bases
-use my_db
+show dbs
