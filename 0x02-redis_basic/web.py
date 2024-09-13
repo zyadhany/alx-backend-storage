@@ -29,4 +29,5 @@ def cache(method):
 
 @cache
 def get_page(url: str) -> str:
+    """ Get page function """
     return requests.get(url).text
