@@ -31,7 +31,7 @@ def call_history(method: Callable) -> Callable:
         if isinstance(self._redis, redis.Redis):
             self._redis.rpush(in_key, str(args))
             self._redis.rpush(out_key, str(output))
-        return method(self, *args, **kwargs)
+        return output
     return invoker
 
 
