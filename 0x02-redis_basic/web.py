@@ -9,10 +9,16 @@ import redis
 
 def get_page(url: str) -> str:
     """ Get page """
-    r = redis.Redis()
+    re = redis.Redis()
     key = f"count:{url}"
-    r.incr(key)
-    r.setex(f"cached:{url}", 10, requests.get(url).text)
-    if r.get(f"cached:{url}"):
-        return r.get(f"cached:{url}").decode('utf-8')
-    return requests.get(url).text
+    res_key = f"result:{url}"
+
+    re.incr(key)
+    res = re.get(res_key)
+    if res:
+        return res.decode('utf-8')
+    res = requests.get(url).text
+    re.set(key, 0)
+    re.setex(res_key, 10, res)
+    return res
+
