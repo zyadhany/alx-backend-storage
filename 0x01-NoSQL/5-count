@@ -1,0 +1,2 @@
+// mongodb list data bases
+db.school.countDocuments({name:"Holberton school"})
