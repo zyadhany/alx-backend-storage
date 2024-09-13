@@ -13,7 +13,7 @@ class Cache:
     def __init__(self):
         """ Constructor """
         self._redis = redis.Redis()
-        self._redis.flushdb()
+        self._redis.flushdb(True)
 
     def store(self, data) -> str:
         """ Store data in redis """
