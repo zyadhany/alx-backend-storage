@@ -35,6 +35,27 @@ def call_history(method: Callable) -> Callable:
     return invoker
 
 
+def replay(method: Callable) -> None:
+    """ Replay decorator """
+    r = redis.Redis()
+    name = method.__qualname__
+    in_name = f"{name}:inputs"
+    out_name = f"{name}:outputs"
+
+    cnt = 0
+    if r.exists(name):
+        cnt = int(r.get(name))
+    print(f"{name} was called {cnt} times:")
+
+    inputs = r.lrange(in_name, 0, -1)
+    outputs = r.lrange(out_name, 0, -1)
+
+    for i, o in zip(inputs, outputs):
+        i = i.decode('utf-8')
+        o = o.decode('utf-8')
+        print(f"{name}(*{i}) -> {o}")
+
+
 class Cache:
     """ Cache class """
 

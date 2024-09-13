@@ -3,12 +3,14 @@
 Main file
 """
 import redis
+from exercise import replay
 
 Cache = __import__('exercise').Cache
 
 cache = Cache()
 
 
-id = cache.store(42)
-print(id)
-print(cache.get(id))
+for i in range(5):
+    cache.store(i)
+
+replay(cache.store)
