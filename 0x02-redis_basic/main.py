@@ -10,4 +10,5 @@ cache = Cache()
 
 
 id = cache.store(42)
+print(id)
 print(cache.get(id))
