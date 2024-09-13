@@ -1,3 +1,6 @@
 // mongodb list data bases
-db.school.updateMany({name:"Holberton school"},
-                {$set: {address: "972 Mission street"}})
+db.school.updateMany(
+    {name: "Holberton school"},
+    {$set: {address: "972 Mission street"}},
+    {multi: true}
+)
