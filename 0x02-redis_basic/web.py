@@ -10,21 +10,21 @@ from functools import wraps
 
 def cache(method):
     """ Cache decorator """
-    @wraps(method)
-    def invoker(url) -> str:
+    @wraps(fn)
+    def wrapper(url: str) -> str:
+        """ Wrapper that:
+            - check whether a url's data is cached
+            - tracks how many times get_page is called
         """
-        Invoker function
-        """
-        re = redis.Redis()
-        re.incr(f'count:{url}')
-        result = re.get(f'result:{url}')
-        if result:
-            return result.decode('utf-8')
-        result = method(url)
-        re.set(f'count:{url}', 0)
-        re.setex(f'result:{url}', 10, result)
-        return result
-    return invoker
+        client = redis.Redis()
+        client.incr(f'count:{url}')
+        cached_page = client.get(f'{url}')
+        if cached_page:
+            return cached_page.decode('utf-8')
+        response = fn(url)
+        client.set(f'{url}', response, 10)
+        return response
+    return wrapper
 
 
 @cache
