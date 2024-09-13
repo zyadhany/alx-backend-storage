@@ -4,8 +4,20 @@ exercise file
 """
 
 import redis
+from functools import wraps
 import uuid
 from typing import Union
+
+
+def count_calls(method: callable) -> callable:
+    """ Count calls decorator """
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """ Wrapper function """
+        if isinstance(self._redis, redis.Redis):
+            self._redis.incr(method.__qualname__)
+        return method(self, *args, **kwargs)
+    return wrapper
 
 
 class Cache:
@@ -16,6 +28,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb(True)
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """ Store data in redis """
         key = str(uuid.uuid4())
