@@ -1,0 +1,2 @@
+// find using regax
+db.students.find({ "name": { $regex: "Holberton*" } })
