@@ -11,19 +11,19 @@ from functools import wraps
 def cache(method):
     """ Cache decorator """
     @wraps(method)
-    def invoker(url):
-        """ invoker function """
+    def invoker(url) -> str:
+        """
+        Invoker function
+        """
         re = redis.Redis()
-        key = f'count:{url}'
-
-        re.incr(key)
-        res = re.get(url)
-        if res:
-            return res.decode('utf-8')
-        res = method(url)
-        re.set(key, 0)
-        re.setex(url, 10, res)
-        return res
+        re.incr(f'count:{url}')
+        result = re.get(f'result:{url}')
+        if result:
+            return result.decode('utf-8')
+        result = method(url)
+        re.set(f'count:{url}', 0)
+        re.setex(f'result:{url}', 10, result)
+        return result
     return invoker
 
 
