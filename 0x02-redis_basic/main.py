@@ -8,9 +8,6 @@ Cache = __import__('exercise').Cache
 
 cache = Cache()
 
-data = b"hello"
-key = cache.store(data)
-print(key)
 
-local_redis = redis.Redis()
-print(local_redis.get(key))
+id = cache.store(42)
+print(cache.get(id))
